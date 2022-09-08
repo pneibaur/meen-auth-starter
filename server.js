@@ -3,6 +3,7 @@ const express = require("express")
 const app = express()
 require("dotenv").config()
 const mongoose = require("mongoose")
+const userController = require("./controllers/users.js")
 
 // Database Config
 mongoose.connect(process.env.DATABASE_URL, {
@@ -17,10 +18,13 @@ db.on('connected', () => console.log('mongo connected'));
 db.on('disconnected', () => console.log('mongo disconnected'));
 
 ///////////////////// MIDDLEWARE
-///////////////////// ROUTES 
-app.get("/", (req, res)=>{
-    res.send("it's working")
-})
+app.use(express.urlencoded({extended:true}))
+app.use("/users", userController)
+
+///////////////////// ROUTES & CONTROLLERS
+// app.get("/", (req, res)=>{
+//     res.send("it's working")
+// })
 
 ///////////////////// LISTENER
 const PORT = process.env.PORT
