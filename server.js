@@ -4,6 +4,7 @@ const app = express()
 require("dotenv").config()
 const mongoose = require("mongoose")
 const session = require("express-session")
+const methodOverride = require("method-override")
 // controller dependencies
 const userController = require("./controllers/users.js")
 const sessionsController = require("./controllers/sessions.js")
@@ -31,11 +32,20 @@ app.use(
     })
 )
 app.use("/sessions", sessionsController)
+app.use(methodOverride("_method"))
 
 ///////////////////// ROUTES & CONTROLLERS
-// app.get("/", (req, res)=>{
-//     res.send("it's working")
-// })
+app.get("/", (req, res)=>{
+    if (req.session.currentUser){
+        res.render("dashboard.ejs", {
+            currentUser: req.session.currentUser,
+        })
+    } else {
+        res.render("index.ejs", {
+            currentUser: req.session.currentUser
+        })
+    }
+})
 
 ///////////////////// LISTENER
 const PORT = process.env.PORT
