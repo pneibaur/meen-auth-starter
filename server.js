@@ -3,7 +3,10 @@ const express = require("express")
 const app = express()
 require("dotenv").config()
 const mongoose = require("mongoose")
+const session = require("express-session")
+// controller dependencies
 const userController = require("./controllers/users.js")
+const sessionsController = require("./controllers/sessions.js")
 
 // Database Config
 mongoose.connect(process.env.DATABASE_URL, {
@@ -20,6 +23,14 @@ db.on('disconnected', () => console.log('mongo disconnected'));
 ///////////////////// MIDDLEWARE
 app.use(express.urlencoded({extended:true}))
 app.use("/users", userController)
+app.use(
+    session({
+        secret: process.env.SECRET,
+        resave: false,
+        saveUninitialized: false,
+    })
+)
+app.use("/sessions", sessionsController)
 
 ///////////////////// ROUTES & CONTROLLERS
 // app.get("/", (req, res)=>{
